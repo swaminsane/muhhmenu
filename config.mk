@@ -1,32 +1,18 @@
-# dmenu version
-VERSION = 5.4
+# config.mk - build configuration for muhhmenu
 
-# paths
-PREFIX = /usr/local
-MANPREFIX = $(PREFIX)/share/man
+CC      = cc
+VERSION = 0.1
 
-X11INC = /usr/X11R6/include
-X11LIB = /usr/X11R6/lib
+PREFIX  = /usr/local
+BINDIR  = $(PREFIX)/bin
+MANDIR  = $(PREFIX)/share/man/man1
 
-# Xinerama, comment if you don't want it
-XINERAMALIBS  = -lXinerama
-XINERAMAFLAGS = -DXINERAMA
+INCS = -I. -Isrc \
+       $(shell pkg-config --cflags x11 xft fontconfig)
 
-# freetype
-FREETYPELIBS = -lfontconfig -lXft
-FREETYPEINC = /usr/include/freetype2
-# OpenBSD (uncomment)
-#FREETYPEINC = $(X11INC)/freetype2
-#MANPREFIX = ${PREFIX}/man
+LIBS = $(shell pkg-config --libs x11 xft fontconfig) \
+       -lsqlite3
 
-# includes and libs
-INCS = -I$(X11INC) -I$(FREETYPEINC)
-LIBS = -L$(X11LIB) -lX11 $(XINERAMALIBS) $(FREETYPELIBS)
-
-# flags
-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE=200809L -DVERSION=\"$(VERSION)\" $(XINERAMAFLAGS)
-CFLAGS   = -std=c99 -pedantic -Wall -Os $(INCS) $(CPPFLAGS)
+CFLAGS   = -std=c99 -pedantic -Wall -Wextra -g -O0 $(INCS) \
+           -DVERSION=\"$(VERSION)\"
 LDFLAGS  = $(LIBS)
-
-# compiler and linker
-CC = cc
